@@ -80,7 +80,7 @@ description: |
 - Area (type=3): 科研 / 学习 / 健康 / 党建 / 生活
 
 **4.2 日期字段（1个）**
-- 截止日期 (type=5)
+- 截止日期 (type=5): date_formatter="yyyy/MM/dd HH:mm"
 
 **4.3 数字字段（2个）**
 - 预计耗时（分钟）(type=2)
@@ -93,8 +93,8 @@ description: |
 - 所属项目 (type=18): 自关联到本表，property.table_id 填入 default_table_id
 
 **4.6 自动时间字段（2个）**
-- 创建时间 (type=1001)
-- 最后更新 (type=1002)
+- 创建时间 (type=1001): date_formatter="yyyy/MM/dd HH:mm"
+- 最后更新 (type=1002): date_formatter="yyyy/MM/dd HH:mm"
 
 ---
 
@@ -113,15 +113,18 @@ description: |
 
 1. 调用 `feishu_bitable_app_table_field.list` 获取字段列表
 2. 调用 `feishu_bitable_app_table_view.list` 获取视图列表
+3. 调用 `feishu_bitable_app_table_record.list` 获取记录列表
 
 **修复操作**：
 - 重命名主字段：将默认的"文本"改为"任务名称"
 - 删除默认字段：删除自带的单选、日期、附件字段
 - 删除默认视图：删除自带的"表格"视图
+- 删除空记录：筛选任务名称为空的记录并批量删除
 
 **确认**：
 - 字段数量：12个 ✓
 - 视图数量：4个 ✓
+- 空记录：0条 ✓
 
 ---
 

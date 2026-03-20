@@ -10,12 +10,12 @@
 | 4 | 今日优先级 | 单选 | 3 | Critical, Progress, Optional, 无 |
 | 5 | Area | 单选 | 3 | 科研, 学习, 健康, 党建, 生活 |
 | 6 | 所属项目 | 关联 | 18 | 自关联，multiple=false |
-| 7 | 截止日期 | 日期 | 5 | - |
+| 7 | 截止日期 | 日期 | 5 | date_formatter="yyyy/MM/dd HH:mm" |
 | 8 | 预计耗时（分钟） | 数字 | 2 | formatter="0" |
 | 9 | 实际耗时（分钟） | 数字 | 2 | formatter="0" |
 | 10 | 描述 | 文本 | 1 | - |
-| 11 | 创建时间 | 创建时间 | 1001 | 自动生成 |
-| 12 | 最后更新 | 修改时间 | 1002 | 自动生成 |
+| 11 | 创建时间 | 创建时间 | 1001 | date_formatter="yyyy/MM/dd HH:mm" |
+| 12 | 最后更新 | 修改时间 | 1002 | date_formatter="yyyy/MM/dd HH:mm" |
 
 ---
 
@@ -87,7 +87,10 @@
   "app_token": "<app_token>",
   "table_id": "<table_id>",
   "field_name": "<字段名>",
-  "type": 5
+  "type": 5,
+  "property": {
+    "date_formatter": "yyyy/MM/dd HH:mm"
+  }
 }
 ```
 
@@ -127,7 +130,10 @@
   "app_token": "<app_token>",
   "table_id": "<table_id>",
   "field_name": "创建时间",
-  "type": 1001
+  "type": 1001,
+  "property": {
+    "date_formatter": "yyyy/MM/dd HH:mm"
+  }
 }
 ```
 
@@ -139,7 +145,10 @@
   "app_token": "<app_token>",
   "table_id": "<table_id>",
   "field_name": "最后更新",
-  "type": 1002
+  "type": 1002,
+  "property": {
+    "date_formatter": "yyyy/MM/dd HH:mm"
+  }
 }
 ```
 
@@ -158,6 +167,9 @@
 **默认视图**（需删除）：
 - 表格
 
+**空记录**（需删除）：
+- 新建表格时飞书可能自动创建空记录（只有自动时间字段有值，任务名称为空）
+
 **清理步骤**：
 
 1. 获取字段列表：`feishu_bitable_app_table_field.list`
@@ -168,6 +180,10 @@
    - 删除除主字段外的所有默认字段
 4. 获取视图列表：`feishu_bitable_app_table_view.list`
 5. 删除默认视图：`feishu_bitable_app_table_view.delete`
+6. 删除空记录：
+   - 获取记录列表：`feishu_bitable_app_table_record.list`
+   - 筛选任务名称为空的记录
+   - 批量删除：`feishu_bitable_app_table_record.batch_delete`
 
 ---
 
@@ -190,3 +206,36 @@
    - 重命名主字段
    - 删除默认字段
    - 删除默认视图
+   - 删除空记录
+
+---
+
+## 删除空记录 API
+
+**筛选空记录**：
+```json
+{
+  "action": "list",
+  "app_token": "<app_token>",
+  "table_id": "<table_id>",
+  "filter": {
+    "conjunction": "and",
+    "conditions": [
+      {
+        "field_name": "任务名称",
+        "operator": "isEmpty"
+      }
+    ]
+  }
+}
+```
+
+**批量删除**：
+```json
+{
+  "action": "batch_delete",
+  "app_token": "<app_token>",
+  "table_id": "<table_id>",
+  "record_ids": ["<record_id_1>", "<record_id_2>", ...]
+}
+```
